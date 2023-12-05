@@ -31,7 +31,34 @@ def load_cola_data(path, part):
             data.append(dp)
     print("no. datapoints in " + part + ": " + str(len(data)))
     return data
+    
+# version using the datasets module (add with pip!)
+import datasets, torch
+from transformers import BertModel, BertTokenizer
 
+dataset = datasets.load_dataset('glue', 'cola', split = "train+test")
+def get_sentence_embedding(sentence):
+	# Tokenize the sentence
+	tokens = tokenizer.tokenize(sentence)
+	# Add the special tokens
+	tokens = ['[CLS]'] + tokens + ['[SEP]']
+	# Obtain the indices of the tokens in the BERT Vocabulary
+	indexes = tokenizer.convert_tokens_to_ids(tokens)
+	# Convert the indexes to PyTorch tensors
+	tokens_tensor = torch.tensor(indexes).unsqueeze(0).to(device)
+	# Obtain the embeddings of the tokens
+	embeddings = model(tokens_tensor)[0]
+	# Take the first token ([CLS]) from the sequence of embeddings
+	cls_embedding = embeddings[0]	
+	return cls_embedding
+
+  
+
+dataset = dataset.map(lambda example: {'embeddings': get_sentence_embedding(example['sentence'])})
+# to save dataset
+dataset.save_to_disk("<path>")
+# to load dataset
+loaded = datasets.load_from_disk("<path>")
 
 if __name__ == '__main__':
     for part in ["dev", "train"]: # ,"train", test"
