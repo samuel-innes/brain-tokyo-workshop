@@ -3,6 +3,7 @@
 task              - (string) - name of task (see domain/config.py)
 maxGen            - (int)    - number of generations to run algorithm
 popSize           - (int)    - number of individuals in population
+dataPath          - (string) - path to the data for the task 
 
 alg_wDist		  - (string) - "standard": 6 chosen values ([-2,-1,-0.5,0.5,1,2])
                                "other": linspace of alg_nVals between weight caps

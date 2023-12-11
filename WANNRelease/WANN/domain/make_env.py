@@ -32,7 +32,8 @@ def make_env(env_name, seed=-1, render_mode=False):
     
   # -- Classification ------------------------------------------------ -- #
   elif (env_name.startswith("Classify")):
-    from domain.classify_gym import ClassifyEnv
+    #from domain.classify_gym import ClassifyEnv
+    from classify_gym import ClassifyEnv
     if env_name.endswith("digits"):
       from domain.classify_gym import digit_raw
       trainSet, target  = digit_raw()
@@ -41,6 +42,10 @@ def make_env(env_name, seed=-1, render_mode=False):
       from domain.classify_gym import mnist_256
       trainSet, target  = mnist_256()
 
+    elif env_name.endswith("cola"):
+      #from domain.classify_gym import cola
+      from classify_gym import cola
+      trainSet, target = cola() # add path to embedded sentences
     env = ClassifyEnv(trainSet,target)  
 
 
@@ -58,3 +63,7 @@ def make_env(env_name, seed=-1, render_mode=False):
     domain.seed(seed)
 
   return env
+
+
+if __name__ == '__main__':
+  env = make_env("Classify_cola")
