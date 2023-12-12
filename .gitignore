@@ -1,6 +1,9 @@
 .vscode/
 
 *.out
+WANNRelease/WANN/outputs/*
 *.pkl
 
 .data/
+
+*.pyc

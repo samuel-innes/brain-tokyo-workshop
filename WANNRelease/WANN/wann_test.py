@@ -7,6 +7,7 @@ TODO: Parallelize evaluation
 import numpy as np
 import argparse
 import sys
+import os
 
 np.set_printoptions(precision=2) 
 np.set_printoptions(linewidth=160)
@@ -55,6 +56,8 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 if __name__ == "__main__":
+  os.chdir("/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/")
+  
   ''' Parse input and launch '''
   parser = argparse.ArgumentParser(description=('Test ANNs on Task'))
     

@@ -54,7 +54,7 @@ def gatherData(data,wann,gen,hyp,savePop=False):
     data - (DataGatherer) - updated run data
   """
   data.gatherData(wann.pop, wann.species)
-  if (gen%hyp['save_mod']) is 0:
+  if (gen%hyp['save_mod']) == 0:
     #data = checkBest(data, bestReps=16)
     data = checkBest(data)
     data.save(gen)
@@ -229,8 +229,8 @@ def mpi_fork(n):
       OMP_NUM_THREADS="1",
       IN_MPI="1"
     )
-    print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
-    subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    print( ["mpirun.actual", "-np", str(n), sys.executable] + sys.argv)
+    subprocess.check_call(["mpirun.actual", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
     return "parent"
   else:
     global nWorker, rank
@@ -261,6 +261,8 @@ def main(argv):
     slave()
 
 if __name__ == "__main__":
+  os.chdir("/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/")
+  
   ''' Parse input and launch '''
   parser = argparse.ArgumentParser(description=('Evolve NEAT networks'))
   
