@@ -1,6 +1,7 @@
 from transformers import BertTokenizer, BertModel
 import datasets
 import pickle
+import numpy as np
 
 
 task = "cola"
@@ -27,8 +28,13 @@ for part in ["train", "validation", "test"]:
     
     assert len(cls_embeddings) == len(dataset[part]["sentence"])
     assert len(cls_embeddings[0]) == 768
+    
+    cls_embeddings = np.array([embedding.detach().numpy() for embedding in cls_embeddings]) # convert to np array
 
     with open("cola_embed/"+part+".pkl", 'wb') as f:
         pickle.dump(cls_embeddings, f)
+        
+    with open("cola_embed/"+part+"_label.pkl", 'wb') as f:
+        pickle.dump(dataset[part]["label"], f)
 
     print("cls embeddings saved to cola_embed/"+part+".pkl")
