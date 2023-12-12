@@ -16,5 +16,6 @@
 module load mpich-3.2
 module load python-3.8.13
 source /home/marten.mueller/project/bioai/.venv/bin/activate
-python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/wann_train.py -n 32
+
+python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/wann_train.py -n 32 -p 'p/cola.json'
 

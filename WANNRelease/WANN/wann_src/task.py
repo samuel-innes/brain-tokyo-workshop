@@ -3,8 +3,7 @@ import time
 import sys
 import random
 
-#from domain.make_env import make_env
-from domain import make_env
+from domain.make_env import make_env
 from .ind import *
 
 
@@ -157,6 +156,3 @@ class Task():
     if returnVals is True:
       return np.mean(reward,axis=0), wVals
     return np.mean(reward,axis=0)
- 
-if __name__ == '__main__':
-  task= Task('cola')

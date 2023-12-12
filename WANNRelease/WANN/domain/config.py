@@ -84,6 +84,7 @@ cola = classify._replace(env_name="Classify_cola", input_size=768, i_act = np.fu
 L = [list(range(1, cola.input_size)),\
      list(range(0, cola.output_size))]
 label = [item for sublist in L for item in sublist]
+cola = cola._replace(in_out_labels=label)
 games['cola'] = cola
 # -- Cart-pole Swingup --------------------------------------------------- -- #
 

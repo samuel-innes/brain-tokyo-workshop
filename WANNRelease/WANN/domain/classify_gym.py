@@ -9,7 +9,6 @@ import sys
 import cv2
 import math
 import pickle
-import csv
 
 class ClassifyEnv(gym.Env):
 
@@ -115,18 +114,16 @@ def cola():
   Fetches the CLS embedding for cola training set
   [samples x embedding dimension]  ([N X 768]) by default
   '''  
-  pickled_embeddings_path = "data/cola_public/cls_embed/dev.pkl"
+  pickled_embeddings_path = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/train.pkl"
   with open(pickled_embeddings_path, 'rb') as f:
     embeddings = pickle.load(f)
+  
+  pickled_labels_path = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/train_label.pkl"
+  with open(pickled_labels_path, 'rb') as f:
+    labels = pickle.load(f)
 
-  embeddings = [embedding.detach().numpy() for embedding in embeddings] # convert to np array
-
-  raw_data = []
-  with open("data/cola_public/raw/in_domain_train.tsv", 'r') as f:
-    reader = csv.reader(f, delimiter='\t')
-    for dp in reader:
-        raw_data.append(dp)
-  labels = [dp[1] for dp in raw_data]
+  labels = np.array(labels) # convert to np array
+  
   return embeddings, labels
 
 
