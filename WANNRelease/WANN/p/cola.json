@@ -1,5 +1,5 @@
 {
     "task":"cola",
     "data_path": "path/to/BERT/sentence/embeddings/NOT_USED_AT_THE_MOMENT",
-    "maxGen": 128
+    "maxGen": 1024
 }

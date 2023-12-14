@@ -24,6 +24,9 @@ def main(argv):
   nRep    = args.nReps
   view    = args.view
   seed    = args.seed
+  
+  # Whether we have the cola task
+  cola_task = True if args.hyperparam == "p/cola.json" else False
 
   # Load task and parameters
   hyp = loadHyp(pFileName=hyp_default)
@@ -38,13 +41,22 @@ def main(argv):
   wVec, aVec, wKey = importNet(infile)
 
   # Show result
-  fitness, wVals = task.getDistFitness(wVec, aVec, hyp,
+  if cola_task:
+    fitness, corr, wVals = task.getDistFitness(wVec, aVec, hyp,
                                 nVals=nMean, nRep=nRep,\
-                                view=view,returnVals=True, seed=seed)      
+                                view=view,returnVals=True, seed=seed, cola = True)
+    print("[***]\tFitness:", fitness , '\n' + "[***]\tMatthew Correlations:", corr, '\n' + "[***]\tWeight Values:\t" , wVals) 
+    lsave(outPref+'reward.out',fitness)
+    lsave(outPref+'corr.out',corr)
+    lsave(outPref+'wVals.out',wVals)
+  else:
+    fitness, wVals = task.getDistFitness(wVec, aVec, hyp,
+                                  nVals=nMean, nRep=nRep,\
+                                  view=view,returnVals=True, seed=seed)      
 
-  print("[***]\tFitness:", fitness , '\n' + "[***]\tWeight Values:\t" , wVals) 
-  lsave(outPref+'reward.out',fitness)
-  lsave(outPref+'wVals.out',wVals)
+    print("[***]\tFitness:", fitness , '\n' + "[***]\tWeight Values:\t" , wVals) 
+    lsave(outPref+'reward.out',fitness)
+    lsave(outPref+'wVals.out',wVals)
   
 # -- --------------------------------------------------------------------- -- #
 def str2bool(v):

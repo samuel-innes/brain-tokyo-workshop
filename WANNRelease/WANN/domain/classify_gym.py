@@ -9,6 +9,9 @@ import sys
 import cv2
 import math
 import pickle
+from sklearn.metrics import matthews_corrcoef
+# from evaluate import load
+
 
 class ClassifyEnv(gym.Env):
 
@@ -82,6 +85,17 @@ class ClassifyEnv(gym.Env):
 
     obs = self.state
     return obs, reward, done, {}
+  
+  def matthews_corr(self, action):
+    y = self.target[self.currIndx]
+    m = y.shape[0]
+    
+    # metric = load("glue", "cola")
+    
+    corr = matthews_corrcoef(y, np.round(action[range(m), y]))
+    # corr = metric.compute(refrences=y, predictions=action[range(m), y])
+    
+    return corr
 
 
 # -- Data Sets ----------------------------------------------------------- -- #

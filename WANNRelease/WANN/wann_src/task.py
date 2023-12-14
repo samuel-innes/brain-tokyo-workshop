@@ -39,7 +39,7 @@ class Task():
     self.needsClosed = (game.env_name.startswith("CartPoleSwingUp"))    
   
 
-  def testInd(self, wVec, aVec, view=False,seed=-1):
+  def testInd(self, wVec, aVec, view=False,seed=-1, cola=False):
     """Evaluate individual on task
     Args:
       wVec    - (np_array) - weight matrix as a flattened vector
@@ -66,7 +66,11 @@ class Task():
     action = selectAct(annOut,self.actSelect)    
     
     state, reward, done, info = self.env.step(action)
+    if cola:
+      corr = self.env.matthews_corr(action)
     if self.maxEpisodeLength == 0:
+      if cola:
+        return reward, corr
       return reward
     else:
       totalReward = reward
@@ -112,7 +116,7 @@ class Task():
 
 
   def getDistFitness(self, wVec, aVec, hyp, \
-                    seed=-1,nRep=False,nVals=6,view=False,returnVals=False):
+                    seed=-1,nRep=False,nVals=6,view=False,returnVals=False, cola=False):
     """Get fitness of a single individual with distribution of weights
   
     Args:
@@ -141,18 +145,34 @@ class Task():
       wVals = np.array((-2,-1.0,-0.5,0.5,1.0,2))
     else:
       wVals = np.linspace(-self.absWCap, self.absWCap ,nVals)
-
-
-    # Get reward from 'reps' rollouts -- test population on same seeds
-    reward = np.empty((nRep,nVals))
-    for iRep in range(nRep):
-      for iVal in range(nVals):
-        wMat = self.setWeights(wVec,wVals[iVal])
-        if seed == -1:
-          reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed,view=view)
-        else:
-          reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed+iRep,view=view)
           
-    if returnVals is True:
-      return np.mean(reward,axis=0), wVals
-    return np.mean(reward,axis=0)
+    # if cola, calc matthews correlation coefficient
+    if cola:
+      # Get reward from 'reps' rollouts -- test population on same seeds
+      reward = np.empty((nRep,nVals))
+      corr = np.empty((nRep,nVals))
+      for iRep in range(nRep):
+        for iVal in range(nVals):
+          wMat = self.setWeights(wVec,wVals[iVal])
+          if seed == -1:
+            reward[iRep,iVal], corr[iRep,iVal] = self.testInd(wMat, aVec, seed=seed,view=view, cola = True)
+          else:
+            reward[iRep,iVal], corr[iRep,iVal] = self.testInd(wMat, aVec, seed=seed+iRep,view=view, cola = True)
+      
+      if returnVals is True:
+        return np.mean(reward,axis=0), np.mean(corr,axis=0), wVals
+      return np.mean(reward,axis=0), np.mean(corr,axis=0)
+    else:
+      # Get reward from 'reps' rollouts -- test population on same seeds
+      reward = np.empty((nRep,nVals))
+      for iRep in range(nRep):
+        for iVal in range(nVals):
+          wMat = self.setWeights(wVec,wVals[iVal])
+          if seed == -1:
+            reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed,view=view)
+          else:
+            reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed+iRep,view=view)
+          
+      if returnVals is True:
+        return np.mean(reward,axis=0), wVals
+      return np.mean(reward,axis=0)

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#PBS -l select=32:ncpus=1:mem=2gb
+#PBS -l select=256:ncpus=1:mem=2gb
 
 # set max execution time
-#PBS -l walltime=0:15:00
+#PBS -l walltime=2:00:00
 
 # define the queue
 #PBS -q short_cpuQ
@@ -17,5 +17,6 @@ module load mpich-3.2
 module load python-3.8.13
 source /home/marten.mueller/project/bioai/.venv/bin/activate
 
-python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/wann_train.py -n 32 -p 'p/cola.json'
+python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/wann_train.py -n 256 -p 'p/cola.json' -o 'cola'
+# python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANN/wann_test.py -p 'p/cola.json' -o 'log/cola_result_' -i 'log/cola_best.out'
 

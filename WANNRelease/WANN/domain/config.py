@@ -80,7 +80,7 @@ mnist256 = mnist256._replace(in_out_labels=label)
 games['mnist256'] = mnist256
 
 # cola
-cola = classify._replace(env_name="Classify_cola", input_size=768, i_act = np.full(768, 1), o_act=np.full(2,1))
+cola = classify._replace(env_name="Classify_cola", input_size=768, output_size=2, i_act = np.full(768, 1), o_act=np.full(2,1))
 L = [list(range(1, cola.input_size)),\
      list(range(0, cola.output_size))]
 label = [item for sublist in L for item in sublist]
