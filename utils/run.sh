@@ -7,3 +7,4 @@
 #SBATCH -t 0-01:00
 
 python3 get_bert_outputs.py
+# python3 baseline.py
