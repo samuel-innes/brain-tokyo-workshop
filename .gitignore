@@ -3,6 +3,7 @@
 *.out
 WANNRelease/WANN/outputs/*
 *.pkl
+*.obj
 
 .data/
 
