@@ -10,7 +10,6 @@ import cv2
 import math
 import pickle
 from sklearn.metrics import matthews_corrcoef
-# from evaluate import load
 
 
 class ClassifyEnv(gym.Env):
@@ -65,7 +64,7 @@ class ClassifyEnv(gym.Env):
     '''
     y = self.target[self.currIndx]
     m = y.shape[0]
-
+    
     log_likelihood = -np.log(action[range(m),y])
     loss = np.sum(log_likelihood) / m
     reward = -loss
@@ -88,12 +87,8 @@ class ClassifyEnv(gym.Env):
   
   def matthews_corr(self, action):
     y = self.target[self.currIndx]
-    m = y.shape[0]
     
-    # metric = load("glue", "cola")
-    
-    corr = matthews_corrcoef(y, np.round(action[range(m), y]))
-    # corr = metric.compute(refrences=y, predictions=action[range(m), y])
+    corr = matthews_corrcoef(y, np.argmax(action, axis=1))
     
     return corr
 
