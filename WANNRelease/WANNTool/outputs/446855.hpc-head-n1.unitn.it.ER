@@ -1,0 +1,384 @@
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2854: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/home/marten.mueller/project/bioai/.venv/lib/python3.8/site-packages/numpy/lib/function_base.py:2855: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py:177: RuntimeWarning: invalid value encountered in cast
+  return r.flatten().astype(np.int32)

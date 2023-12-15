@@ -261,4 +261,6 @@ def main():
       print ("terminal reward", reward, "average steps taken", np.mean(steps_taken)+1)
 
 if __name__ == "__main__":
+  os.chdir("/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/")
+  
   main()

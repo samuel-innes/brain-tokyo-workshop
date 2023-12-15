@@ -168,7 +168,7 @@ def decode_solution_packet(packet):
   packets = np.split(packet, num_worker_trial)
   result = []
   for p in packets:
-    result.append([p[0], p[1], p[2], p[3], p[4], p[5:].astype(np.float)/PRECISION])
+    result.append([p[0], p[1], p[2], p[3], p[4], p[5:].astype(float)/PRECISION])
   return result
 
 def encode_result_packet(results):
@@ -180,9 +180,9 @@ def decode_result_packet(packet):
   r = packet.reshape(num_worker_trial, 4)
   workers = r[:, 0].tolist()
   jobs = r[:, 1].tolist()
-  fits = r[:, 2].astype(np.float)/PRECISION
+  fits = r[:, 2].astype(float)/PRECISION
   fits = fits.tolist()
-  times = r[:, 3].astype(np.float)/PRECISION
+  times = r[:, 3].astype(float)/PRECISION
   times = times.tolist()
   result = []
   n = len(jobs)
@@ -238,7 +238,7 @@ def receive_packets_from_slaves():
 
   reward_list_total = np.zeros((population, 2))
 
-  check_results = np.ones(population, dtype=np.int)
+  check_results = np.ones(population, dtype=int)
   for i in range(1, num_worker+1):
     comm.Recv(result_packet, source=i)
     results = decode_result_packet(result_packet)
@@ -412,8 +412,8 @@ def mpi_fork(n):
       OMP_NUM_THREADS="1",
       IN_MPI="1"
     )
-    print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
-    subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    print( ["mpirun.actual", "-np", str(n), sys.executable] + sys.argv)
+    subprocess.check_call(["mpirun.actual", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
     return "parent"
   else:
     global nworkers, rank
@@ -423,6 +423,8 @@ def mpi_fork(n):
     return "child"
 
 if __name__ == "__main__":
+  os.chdir("/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/")
+  
   parser = argparse.ArgumentParser(description=('Train policy on OpenAI Gym environment '
                                                 'using pepg, ses, openes, ga, cma'))
   parser.add_argument('gamename', type=str, help='cartpole_swingup, biped, etc.')

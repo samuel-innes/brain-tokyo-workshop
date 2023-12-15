@@ -31,6 +31,22 @@ def make_env(env_name, seed=-1, render_mode=False):
     else:
       trainSet, target  = mnist_256()
       env = ClassifyEnv(trainSet, target)
+  elif (env_name.startswith("cola")):
+    print("cola_started")
+    from custom_envs.classify_gym import ClassifyEnv, cola
+    if env_name.startswith("cola_test"):
+      test_images, test_labels  = cola("test")
+      env = ClassifyEnv(test_images, test_labels, matt_corr_mode=True)
+    elif env_name.startswith("cola_train"):
+      train_images, train_labels  = cola("train")
+      env = ClassifyEnv(train_images, train_labels, matt_corr_mode=True)
+    elif env_name.startswith("cola_val"):
+      val_images, val_labels  = cola("validation")
+      env = ClassifyEnv(val_images, val_labels, matt_corr_mode=True)
+    else:
+      trainSet, labels = cola("train")
+      env = ClassifyEnv(trainSet, labels)
+      
   if (seed >= 0):
     env.seed(seed)
   '''

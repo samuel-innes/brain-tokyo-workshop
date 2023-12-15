@@ -68,3 +68,39 @@ mnist256train = Game(env_name='MNISTTRAIN256-v0',
   weight_bias=0.0,
 )
 games['mnist256train'] = mnist256train
+
+cola = Game(env_name='cola',
+  input_size=768,
+  output_size=2,
+  wann_file='cola.out',
+  action_select='softmax', # all, soft, hard
+  weight_bias=0.0,
+)
+games['cola'] = cola
+
+cola_test = Game(env_name='cola_test',
+  input_size=768,
+  output_size=2,
+  wann_file='cola.out',
+  action_select='softmax', # all, soft, hard
+  weight_bias=0.0,
+)
+games['cola_test'] = cola_test
+
+cola_train = Game(env_name='cola_train',
+  input_size=768,
+  output_size=2,
+  wann_file='cola.out',
+  action_select='softmax', # all, soft, hard
+  weight_bias=0.0,
+)
+games['cola_train'] = cola_train
+
+cola_val = Game(env_name='cola_val',
+  input_size=768,
+  output_size=2,
+  wann_file='cola.out',
+  action_select='softmax', # all, soft, hard
+  weight_bias=0.0,
+)
+games['cola_val'] = cola_val

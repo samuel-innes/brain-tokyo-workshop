@@ -9,7 +9,6 @@ import sys
 import cv2
 import math
 import pickle
-from sklearn.metrics import matthews_corrcoef
 
 
 class ClassifyEnv(gym.Env):
@@ -88,9 +87,9 @@ class ClassifyEnv(gym.Env):
   def matthews_corr(self, action):
     y = self.target[self.currIndx]
     
-    corr = matthews_corrcoef(y, np.argmax(action, axis=1))
+    corr = np.corrcoef(y, np.argmax(action, axis=1))
     
-    return corr
+    return corr[0,1]
 
 
 # -- Data Sets ----------------------------------------------------------- -- #

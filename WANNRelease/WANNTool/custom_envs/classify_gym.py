@@ -8,10 +8,11 @@ import numpy as np
 import sys
 import cv2
 import math
+import pickle
 
 class ClassifyEnv(gym.Env):
 
-  def __init__(self, trainSet, target, batch_size=1000, accuracy_mode=False):
+  def __init__(self, trainSet, target, batch_size=1000, accuracy_mode=False, matt_corr_mode=False):
     """
     Data set is a tuple of 
     [0] input data: [nSamples x nInputs]
@@ -24,6 +25,7 @@ class ClassifyEnv(gym.Env):
     self.t_limit = 0    # Number of batches if you need them
     self.batch   = batch_size # Number of images per batch
     self.accuracy_mode = accuracy_mode
+    self.matt_corr_mode = matt_corr_mode
 
     self.seed()
     self.viewer = None
@@ -69,6 +71,10 @@ class ClassifyEnv(gym.Env):
       p = np.argmax(action, axis=1)
       accuracy = (float(np.sum(p==y)) / self.batch)
       reward = accuracy
+    elif self.matt_corr_mode:
+      p = np.argmax(action, axis=1)
+      corr = np.corrcoef(y,p)[0,1]
+      reward = corr
     else:
       log_likelihood = -np.log(action[range(m),y])
       loss = np.sum(log_likelihood) / m
@@ -166,6 +172,25 @@ def mnist_patch9():
   ---
   '''
 
+def cola(dataset_type):
+  ''' 
+  Fetches the CLS embedding for cola training set
+  [samples x embedding dimension]  ([N X 768]) by default
+  '''  
+  assert dataset_type in ["train", "test", "validation"]
+  
+  pickled_embeddings_path_pref = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/"
+    
+  with open(pickled_embeddings_path_pref + dataset_type + ".pkl", 'rb') as f:
+    embeddings = pickle.load(f)
+  
+  pickled_labels_path_pref = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/"
+  with open(pickled_labels_path_pref + dataset_type + "_label.pkl", 'rb') as f:
+    labels = pickle.load(f)
+
+  labels = np.array(labels) # convert to np array
+  
+  return embeddings, labels
 
 def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
   """
