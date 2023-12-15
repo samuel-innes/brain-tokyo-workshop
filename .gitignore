@@ -1,10 +1,9 @@
 .vscode/
 
-*.out
-!slurm*.out
 utils/bert-base-uncased-finetuned-cola/*
+WANNRelease/WANN/log/cola_best/*
+WANNRelease/WANN/log/cola_pop/*
 
-WANNRelease/WANN/outputs/*
 *.pkl
 *.obj
 
