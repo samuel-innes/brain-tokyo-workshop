@@ -9,11 +9,12 @@ import sys
 import cv2
 import math
 import pickle
+from sklearn.metrics import matthews_corrcoef
 
 
 class ClassifyEnv(gym.Env):
 
-  def __init__(self, trainSet, target):
+  def __init__(self, trainSet, target, matt_corr_mode=False):
     """
     Data set is a tuple of 
     [0] input data: [nSamples x nInputs]
@@ -25,6 +26,8 @@ class ClassifyEnv(gym.Env):
     self.t = 0          # Current batch number
     self.t_limit = 0    # Number of batches if you want to use them (we didn't)
     self.batch   = 1000 # Number of images per batch
+    self.matt_corr_mode = matt_corr_mode
+
     self.seed()
     self.viewer = None
 
@@ -64,9 +67,14 @@ class ClassifyEnv(gym.Env):
     y = self.target[self.currIndx]
     m = y.shape[0]
     
-    log_likelihood = -np.log(action[range(m),y])
-    loss = np.sum(log_likelihood) / m
-    reward = -loss
+    if self.matt_corr_mode:
+      p = np.argmax(action, axis=1)
+      corr = matthews_corrcoef(y,p)
+      reward = corr
+    else:
+      log_likelihood = -np.log(action[range(m),y])
+      loss = np.sum(log_likelihood) / m
+      reward = -loss
 
     if self.t_limit > 0: # We are doing batches
       reward *= (1/self.t_limit) # average
@@ -87,9 +95,9 @@ class ClassifyEnv(gym.Env):
   def matthews_corr(self, action):
     y = self.target[self.currIndx]
     
-    corr = np.corrcoef(y, np.argmax(action, axis=1))
+    corr = matthews_corrcoef(y, np.argmax(action, axis=1))
     
-    return corr[0,1]
+    return corr
 
 
 # -- Data Sets ----------------------------------------------------------- -- #

@@ -9,6 +9,7 @@ import sys
 import cv2
 import math
 import pickle
+from sklearn.metrics import matthews_corrcoef
 
 class ClassifyEnv(gym.Env):
 
@@ -73,7 +74,7 @@ class ClassifyEnv(gym.Env):
       reward = accuracy
     elif self.matt_corr_mode:
       p = np.argmax(action, axis=1)
-      corr = np.corrcoef(y,p)[0,1]
+      corr = matthews_corrcoef(y,p)
       reward = corr
     else:
       log_likelihood = -np.log(action[range(m),y])

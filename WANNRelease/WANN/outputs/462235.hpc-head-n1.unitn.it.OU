@@ -1,0 +1,6 @@
+	*** Running with hyperparameters:  p/cola.json 	***
+[33mWARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.[0m
+[33mWARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.[0m
+[***]	Fitness: [0.   0.   0.02 0.28 0.33 0.38] 
+[***]	Matthew Correlations: [0.   0.   0.02 0.28 0.33 0.38] 
+[***]	Weight Values:	 [-2.  -1.  -0.5  0.5  1.   2. ]

@@ -34,6 +34,8 @@ def make_env(env_name, seed=-1, render_mode=False):
   elif (env_name.startswith("Classify")):
     from domain.classify_gym import ClassifyEnv
     
+    use_matt_corr = False
+    
     if env_name.endswith("digits"):
       from domain.classify_gym import digit_raw
       trainSet, target  = digit_raw()
@@ -44,9 +46,10 @@ def make_env(env_name, seed=-1, render_mode=False):
 
     elif env_name.endswith("cola"):
       from domain.classify_gym import cola
-      trainSet, target = cola() # add path to embedded sentences
+      trainSet, target = cola()
+      use_matt_corr = True
       
-    env = ClassifyEnv(trainSet,target)  
+    env = ClassifyEnv(trainSet, target, matt_corr_mode=use_matt_corr)  
 
 
   # -- Cart Pole Swing up -------------------------------------------- -- #

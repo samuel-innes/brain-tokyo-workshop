@@ -33,7 +33,7 @@ def master():
     print(gen, '\t - \t', data.display())
 
   # Clean up and data gathering at end of run
-  data = gatherData(data,wann,gen,hyp,savePop=True)
+  data = gatherData(data,wann,gen,hyp,savePop=False)
   data.save()
   data.savePop(wann.pop,fileName)
   stopAllWorkers()

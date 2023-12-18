@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#PBS -l select=256:ncpus=1:mem=2gb
+#PBS -l select=256:ncpus=1:mem=4gb
 
 # set max execution time
-#PBS -l walltime=2:00:00
+#PBS -l walltime=4:00:00
 
 # define the queue
 #PBS -q short_cpuQ

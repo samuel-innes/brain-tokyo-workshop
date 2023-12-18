@@ -34,13 +34,13 @@ def make_env(env_name, seed=-1, render_mode=False):
   elif (env_name.startswith("cola")):
     print("cola_started")
     from custom_envs.classify_gym import ClassifyEnv, cola
-    if env_name.startswith("cola_test"):
+    if env_name.endswith("_test"):
       test_images, test_labels  = cola("test")
       env = ClassifyEnv(test_images, test_labels, matt_corr_mode=True)
-    elif env_name.startswith("cola_train"):
+    elif env_name.endswith("_train"):
       train_images, train_labels  = cola("train")
       env = ClassifyEnv(train_images, train_labels, matt_corr_mode=True)
-    elif env_name.startswith("cola_val"):
+    elif env_name.endswith("_val"):
       val_images, val_labels  = cola("validation")
       env = ClassifyEnv(val_images, val_labels, matt_corr_mode=True)
     else:
