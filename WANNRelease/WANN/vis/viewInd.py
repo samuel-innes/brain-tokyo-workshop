@@ -6,7 +6,7 @@ sys.path.append('../domain/')
 sys.path.append('vis')
 from domain.config import games
 
-def viewInd(ind, taskName):
+def viewInd(ind, taskName, figsize=(10,10)):
   env = games[taskName]
   if isinstance(ind, str):
     ind = np.loadtxt(ind, delimiter=',') 
@@ -24,7 +24,7 @@ def viewInd(ind, taskName):
   pos = getNodeCoord(G,layer,taskName)
     
   # Draw Graph
-  fig = plt.figure(figsize=(10,20), dpi=100)
+  fig = plt.figure(figsize=figsize, dpi=100)
   ax = fig.add_subplot(111)
   drawEdge(G, pos, wMat, layer)
   nx.draw_networkx_nodes(G,pos,\
