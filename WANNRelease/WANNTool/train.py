@@ -28,6 +28,8 @@ import torch
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 from torchsummary import summary
+from sklearn.metrics import matthews_corrcoef
+from custom_envs.classify_gym import cola
 
 
 ### ES related code
@@ -387,30 +389,46 @@ def backprop_train():
   global model
   
   sprint("Backpropagation optimization started")
-  model.make_env()
+  
+  BATCH_SIZE = 32
+  
+  train_ds, train_labels  = cola("train")
+  train_ds = torch.tensor(train_ds)
+  train_labels = torch.tensor(train_labels)
+  train = torch.utils.data.TensorDataset(train_ds, train_labels)
+  train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True)
+  
+  val_ds, val_labels  = cola("validation")
+  val_ds = torch.tensor(val_ds)
+  val_labels = torch.tensor(val_labels)
+  val = torch.utils.data.TensorDataset(val_ds, val_labels)
+  val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, shuffle=False)
+  
   torch_model = backpropmodel.importNetAsTorchModel("champions/"+model.wann_file, model.input_size, model.output_size)
   
-  # sprint(torch_model)
-  summary(torch_model, tuple([1, 768]))
+  # summary(torch_model, tuple([768]))
   
   loss_fn = torch.nn.CrossEntropyLoss()
   optimizer = torch.optim.Adam(torch_model.parameters())
   
-  X = torch.tensor(model.env.trainSet)
-  y = torch.tensor(model.env.target)
-  ds = torch.utils.data.TensorDataset(X, y)
-  
-  training_loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=True)
-  # validation_loader = torch.utils.data.DataLoader(validation_set, batch_size=4, shuffle=False)
+  def compute_metrics(labels, predictions):
+    predictions = np.argmax(predictions, axis=1)
+    
+    corr = matthews_corrcoef(labels, predictions)
+    return corr
   
   def train_one_epoch(epoch_index, tb_writer):
     running_loss = 0.
+    running_corr = 0.
     last_loss = 0.
+    last_corr = 0.
+    total_loss = 0.
+    total_corr = 0.
 
     # Here, we use enumerate(training_loader) instead of
     # iter(training_loader) so that we can track the batch
     # index and do some intra-epoch reporting
-    for i, data in enumerate(training_loader):
+    for i, data in enumerate(train_loader):
         # Every data instance is an input + label pair
         inputs, labels = data
 
@@ -419,9 +437,10 @@ def backprop_train():
 
         # Make predictions for this batch
         outputs = torch_model(inputs)
-
+        
         # Compute the loss and its gradients
         loss = loss_fn(outputs, labels)
+        corr = compute_metrics(labels, outputs.detach().numpy())
         loss.backward()
 
         # Adjust learning weights
@@ -429,53 +448,68 @@ def backprop_train():
 
         # Gather data and report
         running_loss += loss.item()
-        if i % 500 == 499:
-            last_loss = running_loss / 500 # loss per batch
-            print('  batch {} loss: {}'.format(i + 1, last_loss))
-            tb_x = epoch_index * len(training_loader) + i + 1
+        running_corr += corr
+        if i % 32 == 31:
+            total_loss += running_loss
+            total_corr += running_corr
+            last_loss = running_loss / 32 # loss per batch
+            last_corr = running_corr / 32 # corr per batch
+            print('  batch {} loss: {} corr: {}'.format(i + 1, last_loss, last_corr))
+            tb_x = epoch_index * len(train_loader) + i + 1
             tb_writer.add_scalar('Loss/train', last_loss, tb_x)
             running_loss = 0.
-
-    return last_loss
+            running_corr = 0.
+    total_loss /= (i + 1)
+    total_corr /= (i + 1)
+    return total_loss, total_corr
   
   # Initializing in a separate cell so we can easily add more epochs to the same run
   timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
   writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
   epoch_number = 0
 
-  EPOCHS = 3
+  EPOCHS = 50
 
-  # best_vloss = 1_000_000.s
+  best_vloss = 1_000_000.
+  best_vcorr = -2.
 
   for epoch in range(EPOCHS):
       print('EPOCH {}:'.format(epoch_number + 1))
 
       # Make sure gradient tracking is on, and do a pass over the data
       torch_model.train(True)
-      avg_loss = train_one_epoch(epoch_number, writer)
+      avg_loss, avg_corr = train_one_epoch(epoch_number, writer)
 
 
-      # running_vloss = 0.0s
+      running_vloss = 0.0
+      running_vcorr = 0.0
       # Set the model to evaluation mode, disabling dropout and using population
       # statistics for batch normalization.
-      # model.eval()
+      torch_model.eval()
 
       # Disable gradient computation and reduce memory consumption.
-      # with torch.no_grad():
-      #     for i, vdata in enumerate(validation_loader):
-      #         vinputs, vlabels = vdata
-      #         voutputs = model(vinputs)
-      #         vloss = loss_fn(voutputs, vlabels)
-      #         running_vloss += vloss
+      with torch.no_grad():
+          for i, vdata in enumerate(val_loader):
+              vinputs, vlabels = vdata
+              voutputs = torch_model(vinputs)
+              vloss = loss_fn(voutputs, vlabels)
+              vcorr = compute_metrics(vlabels, voutputs.detach().numpy())
+              running_vloss += vloss
+              running_vcorr += vcorr
 
-      # avg_vloss = running_vloss / (i + 1)
-      # print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
+      avg_vloss = running_vloss / (i + 1)
+      avg_vcorr = running_vcorr / (i + 1)
+      print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
+      print('MATTHEW CORRELATION train {} valid {}'.format(avg_corr, avg_vcorr))
 
       # Log the running loss averaged per batch
       # for both training and validation
-      writer.add_scalars('Training Loss',
-                      { 'Training' : avg_loss},
-                      epoch_number + 1)
+      writer.add_scalars('Training vs. Validation Loss',
+                    { 'Training' : avg_loss, 'Validation' : avg_vloss },
+                    epoch_number + 1)
+      writer.add_scalars('Training vs. Validation Correlation',
+                    { 'Training' : avg_corr, 'Validation' : avg_vcorr },
+                    epoch_number + 1)
       writer.flush()
 
       # Track best performance, and save the model's state

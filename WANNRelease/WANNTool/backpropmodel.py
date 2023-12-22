@@ -4,14 +4,20 @@ import torch
 import numpy as np
 
 class SelectiveActivation(nn.Module):
-  def __init__(self, indices,activation, bias=True):
+  def __init__(self, indices,activation, bias=False):
     super().__init__()
     self.indices = indices
     self.activation=activation
-    self.linear = nn.Linear(len(indices), 1 , bias)
+    if len(indices) == 0:
+      self.linear = nn.Parameter(torch.ones(1))
+    else:
+      self.linear = nn.Linear(len(indices), 1 , bias)
   
   def forward(self, x):
-    return torch.cat([x,self.activation(self.linear(x[:,self.indices]))], 1)
+    if len(self.indices) == 0:
+      return torch.cat([x,self.activation(torch.ones((x.shape[0], 1)) * self.linear)], 1)
+    else:
+      return torch.cat([x,self.activation(self.linear(x[:,self.indices]))], 1)
 
 class WANNOutput(nn.Module):
     def __init__(self,outputSize):
@@ -19,7 +25,7 @@ class WANNOutput(nn.Module):
         self.outputSize = outputSize
 
     def forward(self, x):
-        return x[-self.outputSize:]
+        return x[:,-self.outputSize:]
     
 def importNetAsTorchModel(fileName,inputSize, outputSize):
     wVec, aVec, wKey = ann.importNet(fileName)
