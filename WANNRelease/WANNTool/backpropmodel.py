@@ -11,7 +11,7 @@ class SelectiveActivation(nn.Module):
     self.linear = nn.Linear(len(indices), 1 , bias)
   
   def forward(self, x):
-    return torch.cat([x,self.activation(self.linear(x[self.indices]))])
+    return torch.cat([x,self.activation(self.linear(x[:,self.indices]))], 1)
 
 class WANNOutput(nn.Module):
     def __init__(self,outputSize):

@@ -21,8 +21,13 @@ import sys
 import config
 from model import make_model, simulate
 from es import CMAES, SimpleGA, OpenES, PEPG
+import backpropmodel
 import argparse
 import time
+import torch
+from torch.utils.tensorboard import SummaryWriter
+from datetime import datetime
+from torchsummary import summary
 
 
 ### ES related code
@@ -107,6 +112,8 @@ def initialize_settings(sigma_init=0.1, sigma_decay=0.9999):
       weight_decay=0.005,
       popsize=population)
     es = pepg
+  elif optimizer == 'backprop':
+    es = None
   else:
     oes = OpenES(num_params,
       sigma_init=sigma_init,
@@ -375,6 +382,110 @@ def master():
       with open(filename_best, 'wt') as out:
         res = json.dump([best_model_params_eval, best_reward_eval, reward_stdev], out, sort_keys=True, indent=0, separators=(',', ': '))
       sprint("improvement", t, improvement, "curr", reward_eval, "prev", prev_best_reward_eval, "best", best_reward_eval, "stdev", reward_stdev)
+      
+def backprop_train():
+  global model
+  
+  sprint("Backpropagation optimization started")
+  model.make_env()
+  torch_model = backpropmodel.importNetAsTorchModel("champions/"+model.wann_file, model.input_size, model.output_size)
+  
+  # sprint(torch_model)
+  summary(torch_model, tuple([1, 768]))
+  
+  loss_fn = torch.nn.CrossEntropyLoss()
+  optimizer = torch.optim.Adam(torch_model.parameters())
+  
+  X = torch.tensor(model.env.trainSet)
+  y = torch.tensor(model.env.target)
+  ds = torch.utils.data.TensorDataset(X, y)
+  
+  training_loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=True)
+  # validation_loader = torch.utils.data.DataLoader(validation_set, batch_size=4, shuffle=False)
+  
+  def train_one_epoch(epoch_index, tb_writer):
+    running_loss = 0.
+    last_loss = 0.
+
+    # Here, we use enumerate(training_loader) instead of
+    # iter(training_loader) so that we can track the batch
+    # index and do some intra-epoch reporting
+    for i, data in enumerate(training_loader):
+        # Every data instance is an input + label pair
+        inputs, labels = data
+
+        # Zero your gradients for every batch!
+        optimizer.zero_grad()
+
+        # Make predictions for this batch
+        outputs = torch_model(inputs)
+
+        # Compute the loss and its gradients
+        loss = loss_fn(outputs, labels)
+        loss.backward()
+
+        # Adjust learning weights
+        optimizer.step()
+
+        # Gather data and report
+        running_loss += loss.item()
+        if i % 500 == 499:
+            last_loss = running_loss / 500 # loss per batch
+            print('  batch {} loss: {}'.format(i + 1, last_loss))
+            tb_x = epoch_index * len(training_loader) + i + 1
+            tb_writer.add_scalar('Loss/train', last_loss, tb_x)
+            running_loss = 0.
+
+    return last_loss
+  
+  # Initializing in a separate cell so we can easily add more epochs to the same run
+  timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+  writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
+  epoch_number = 0
+
+  EPOCHS = 3
+
+  # best_vloss = 1_000_000.s
+
+  for epoch in range(EPOCHS):
+      print('EPOCH {}:'.format(epoch_number + 1))
+
+      # Make sure gradient tracking is on, and do a pass over the data
+      torch_model.train(True)
+      avg_loss = train_one_epoch(epoch_number, writer)
+
+
+      # running_vloss = 0.0s
+      # Set the model to evaluation mode, disabling dropout and using population
+      # statistics for batch normalization.
+      # model.eval()
+
+      # Disable gradient computation and reduce memory consumption.
+      # with torch.no_grad():
+      #     for i, vdata in enumerate(validation_loader):
+      #         vinputs, vlabels = vdata
+      #         voutputs = model(vinputs)
+      #         vloss = loss_fn(voutputs, vlabels)
+      #         running_vloss += vloss
+
+      # avg_vloss = running_vloss / (i + 1)
+      # print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
+
+      # Log the running loss averaged per batch
+      # for both training and validation
+      writer.add_scalars('Training Loss',
+                      { 'Training' : avg_loss},
+                      epoch_number + 1)
+      writer.flush()
+
+      # Track best performance, and save the model's state
+      # if avg_vloss < best_vloss:
+      #     best_vloss = avg_vloss
+      #     model_path = 'model_{}_{}'.format(timestamp, epoch_number)
+      #     torch.save(model.state_dict(), model_path)
+
+      epoch_number += 1
+  
 
 
 def main(args):
@@ -392,11 +503,14 @@ def main(args):
 
   initialize_settings(args.sigma_init, args.sigma_decay)
 
-  sprint("process", rank, "out of total ", comm.Get_size(), "started")
-  if (rank == 0):
-    master()
+  if optimizer != "backprop":
+    sprint("process", rank, "out of total ", comm.Get_size(), "started")
+    if (rank == 0):
+      master()
+    else:
+      slave()
   else:
-    slave()
+    backprop_train()
 
 def mpi_fork(n):
   """Re-launches the current script with workers
@@ -428,7 +542,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description=('Train policy on OpenAI Gym environment '
                                                 'using pepg, ses, openes, ga, cma'))
   parser.add_argument('gamename', type=str, help='cartpole_swingup, biped, etc.')
-  parser.add_argument('-o', '--optimizer', type=str, help='ses, pepg, openes, ga, cma.', default='pepg')
+  parser.add_argument('-o', '--optimizer', type=str, help='ses, pepg, openes, ga, cma, backprop.', default='pepg')
   parser.add_argument('-e', '--num_episode', type=int, default=4, help='num episodes per trial')
   parser.add_argument('--eval_steps', type=int, default=25, help='evaluate every eval_steps step')
   parser.add_argument('-n', '--num_worker', type=int, default=64)
@@ -441,5 +555,6 @@ if __name__ == "__main__":
   parser.add_argument('--sigma_decay', type=float, default=0.999, help='sigma_decay')
 
   args = parser.parse_args()
-  if "parent" == mpi_fork(args.num_worker+1): os.exit()
+  if args.optimizer != "backprop":
+    if "parent" == mpi_fork(args.num_worker+1): os.exit()
   main(args)
