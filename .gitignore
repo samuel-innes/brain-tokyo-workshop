@@ -8,5 +8,6 @@ WANNRelease/WANN/log/cola_pop/*
 *.obj
 
 .data/
+.runs/
 
 *.pyc
