@@ -2,6 +2,17 @@ import ann
 import torch.nn as nn
 import torch
 import numpy as np
+import transformers
+
+class BertBase(nn.Module):
+    def __init__(self):
+        super().__init__()
+        from transformers import BertModel
+        self.base_model = BertModel.from_pretrained('bert-base-uncased')
+    def forward(self, x):
+        attn_mask = x[:,1,:]
+        x = x[:,0,:]
+        return self.base_model(x, attention_mask=attn_mask)
 
 class SelectiveActivation(nn.Module):
   def __init__(self, indices,activation, bias=False):
@@ -14,6 +25,8 @@ class SelectiveActivation(nn.Module):
       self.linear = nn.Linear(len(indices), 1 , bias)
   
   def forward(self, x):
+    if isinstance(x, transformers.utils.ModelOutput):
+        x = x.last_hidden_state[:,0,:]
     if len(self.indices) == 0:
       return torch.cat([x,self.activation(torch.ones((x.shape[0], 1)) * self.linear)], 1)
     else:
@@ -27,13 +40,16 @@ class WANNOutput(nn.Module):
     def forward(self, x):
         return x[:,-self.outputSize:]
     
-def importNetAsTorchModel(fileName,inputSize, outputSize):
+def importNetAsTorchModel(fileName, inputSize, outputSize, add_bert = False):
     wVec, aVec, wKey = ann.importNet(fileName)
     wSize = int(np.sqrt(wVec.shape[0]))
     w = wVec.reshape((wSize,wSize))
     
     # Create a torch model
     model = nn.Sequential()
+    
+    if add_bert:
+        model.add_module('bert', BertBase())
 
     for i in range(inputSize,wSize):
         indices = w[:,i].nonzero()[0]
@@ -41,6 +57,7 @@ def importNetAsTorchModel(fileName,inputSize, outputSize):
         name = f'{actName(aVec[i])}_{i}'
         model.add_module(name, SelectiveActivation(indices, activation))
     model.add_module('output', WANNOutput(outputSize))
+    
     return model
 
 

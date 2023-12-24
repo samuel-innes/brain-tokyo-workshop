@@ -25,11 +25,10 @@ import backpropmodel
 import argparse
 import time
 import torch
-from torch.utils.tensorboard import SummaryWriter
-from datetime import datetime
 from torchsummary import summary
 from sklearn.metrics import matthews_corrcoef
 from custom_envs.classify_gym import cola
+import torch.distributed as dist
 
 
 ### ES related code
@@ -385,31 +384,73 @@ def master():
         res = json.dump([best_model_params_eval, best_reward_eval, reward_stdev], out, sort_keys=True, indent=0, separators=(',', ': '))
       sprint("improvement", t, improvement, "curr", reward_eval, "prev", prev_best_reward_eval, "best", best_reward_eval, "stdev", reward_stdev)
       
-def backprop_train():
+def backprop_train(add_bert=False):
   global model
   
-  sprint("Backpropagation optimization started")
+  local_rank = int(os.environ["LOCAL_RANK"])
+  sprint("Backpropagation optimization started", local_rank)
   
   BATCH_SIZE = 32
   
-  train_ds, train_labels  = cola("train")
-  train_ds = torch.tensor(train_ds)
-  train_labels = torch.tensor(train_labels)
-  train = torch.utils.data.TensorDataset(train_ds, train_labels)
-  train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True)
+  torch_model = backpropmodel.importNetAsTorchModel("champions/"+model.wann_file, model.input_size, model.output_size, add_bert=add_bert)
   
-  val_ds, val_labels  = cola("validation")
-  val_ds = torch.tensor(val_ds)
-  val_labels = torch.tensor(val_labels)
-  val = torch.utils.data.TensorDataset(val_ds, val_labels)
-  val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, shuffle=False)
   
-  torch_model = backpropmodel.importNetAsTorchModel("champions/"+model.wann_file, model.input_size, model.output_size)
+  if add_bert:
+    from transformers import BertTokenizer
+    from datasets import load_dataset
+    
+    torch_model = torch.nn.parallel.DistributedDataParallel(torch_model, find_unused_parameters=True)
+    
+    dataset = load_dataset("glue", "cola")
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    
+    def preprocess_function(examples):
+      return tokenizer(examples["sentence"], padding=True, truncation=True)
+    
+    encoded_dataset = dataset.map(preprocess_function, batched=True, batch_size=len(dataset["train"]["sentence"]))
+    
+    train_ds, train_attn_mask_ds, train_labels = encoded_dataset["train"]["input_ids"], encoded_dataset["train"]["attention_mask"], encoded_dataset["train"]["label"]
+    train_ds = torch.tensor(train_ds)
+    train_attn_mask_ds = torch.tensor(train_attn_mask_ds)
+    train_ds = torch.stack([train_ds, train_attn_mask_ds], dim = 1)
+    train_labels = torch.tensor(train_labels)
+    train = torch.utils.data.TensorDataset(train_ds, train_labels)
+    
+    train_sampler = torch.utils.data.distributed.DistributedSampler(train)
+    train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, sampler=train_sampler)
+    
+    val_ds, val_attn_mask_ds, val_labels = encoded_dataset["validation"]["input_ids"], encoded_dataset["validation"]["attention_mask"], encoded_dataset["validation"]["label"]
+    val_ds = torch.tensor(val_ds)
+    val_attn_mask_ds = torch.tensor(val_attn_mask_ds)
+    val_ds = torch.stack([val_ds, val_attn_mask_ds], dim = 1)
+    val_labels = torch.tensor(val_labels)
+    val = torch.utils.data.TensorDataset(val_ds, val_labels)
+    
+    val_sampler = torch.utils.data.distributed.DistributedSampler(val)
+    val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, sampler=val_sampler)
+  else:
+    train_ds, train_labels  = cola("train")
+    train_ds = torch.tensor(train_ds)
+    train_labels = torch.tensor(train_labels)
+    train = torch.utils.data.TensorDataset(train_ds, train_labels)
+    train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True)
+    
+    val_ds, val_labels  = cola("validation")
+    val_ds = torch.tensor(val_ds)
+    val_labels = torch.tensor(val_labels)
+    val = torch.utils.data.TensorDataset(val_ds, val_labels)
+    val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, shuffle=False)
   
-  # summary(torch_model, tuple([768]))
+  # if add_bert:
+  #   summary(torch_model, tuple([2, 512]), dtypes=[torch.int32])
+  # else:
+  #   summary(torch_model, tuple([768]))
   
   loss_fn = torch.nn.CrossEntropyLoss()
-  optimizer = torch.optim.Adam(torch_model.parameters())
+  if add_bert:
+    optimizer = torch.optim.Adam(torch_model.parameters(), lr=2e-5, weight_decay=0.01)
+  else:
+    optimizer = torch.optim.Adam(torch_model.parameters())
   
   def compute_metrics(labels, predictions):
     predictions = np.argmax(predictions, axis=1)
@@ -417,7 +458,7 @@ def backprop_train():
     corr = matthews_corrcoef(labels, predictions)
     return corr
   
-  def train_one_epoch(epoch_index, tb_writer):
+  def train_one_epoch(epoch_index):
     running_loss = 0.
     running_corr = 0.
     last_loss = 0.
@@ -449,14 +490,24 @@ def backprop_train():
         # Gather data and report
         running_loss += loss.item()
         running_corr += corr
-        if i % 32 == 31:
+        if i % 8 == 7:
             total_loss += running_loss
             total_corr += running_corr
-            last_loss = running_loss / 32 # loss per batch
-            last_corr = running_corr / 32 # corr per batch
-            print('  batch {} loss: {} corr: {}'.format(i + 1, last_loss, last_corr))
-            tb_x = epoch_index * len(train_loader) + i + 1
-            tb_writer.add_scalar('Loss/train', last_loss, tb_x)
+            last_loss = running_loss / 8 # loss per batch
+            last_corr = running_corr / 8 # corr per batch
+            
+            last_loss = torch.tensor([last_loss])
+            last_corr = torch.tensor([last_corr])
+            dist.reduce(last_loss, dst=0, op=dist.ReduceOp.SUM)
+            dist.reduce(last_corr, dst=0, op=dist.ReduceOp.SUM)
+            last_loss = last_loss.item()
+            last_corr = last_corr.item()
+            
+            if local_rank == 0:
+              assert dist.get_world_size() == int(os.environ["WORLD_SIZE"])
+              last_loss /= dist.get_world_size()
+              last_corr /= dist.get_world_size()
+              print('  batch {} loss: {} corr: {}'.format(i + 1, last_loss, last_corr))
             running_loss = 0.
             running_corr = 0.
     total_loss /= (i + 1)
@@ -464,30 +515,36 @@ def backprop_train():
     return total_loss, total_corr
   
   # Initializing in a separate cell so we can easily add more epochs to the same run
-  timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-  writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
-  epoch_number = 0
-
-  EPOCHS = 50
+  EPOCHS = 8
 
   best_vloss = 1_000_000.
   best_vcorr = -2.
 
   for epoch in range(EPOCHS):
-      print('EPOCH {}:'.format(epoch_number + 1))
+      if local_rank == 0:
+        print('EPOCH {}:'.format(epoch + 1))
+      
+      if add_bert:
+        train_sampler.set_epoch(epoch + 1)
 
       # Make sure gradient tracking is on, and do a pass over the data
       torch_model.train(True)
-      avg_loss, avg_corr = train_one_epoch(epoch_number, writer)
-
-
-      running_vloss = 0.0
-      running_vcorr = 0.0
+      avg_loss, avg_corr = train_one_epoch(epoch)
+      
+      avg_loss = torch.tensor([avg_loss])
+      avg_corr = torch.tensor([avg_corr])
+      dist.reduce(avg_loss, dst=0, op=dist.ReduceOp.SUM)
+      dist.reduce(avg_corr, dst=0, op=dist.ReduceOp.SUM)
+      avg_loss = avg_loss.item()
+      avg_corr = avg_corr.item()
+      
       # Set the model to evaluation mode, disabling dropout and using population
       # statistics for batch normalization.
       torch_model.eval()
-
+      
       # Disable gradient computation and reduce memory consumption.
+      running_vloss = 0.0
+      running_vcorr = 0.0
       with torch.no_grad():
           for i, vdata in enumerate(val_loader):
               vinputs, vlabels = vdata
@@ -496,30 +553,40 @@ def backprop_train():
               vcorr = compute_metrics(vlabels, voutputs.detach().numpy())
               running_vloss += vloss
               running_vcorr += vcorr
-
       avg_vloss = running_vloss / (i + 1)
       avg_vcorr = running_vcorr / (i + 1)
-      print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
-      print('MATTHEW CORRELATION train {} valid {}'.format(avg_corr, avg_vcorr))
+      
+      avg_vloss = torch.tensor([avg_vloss])
+      avg_vcorr = torch.tensor([avg_vcorr])
+      dist.reduce(avg_vloss, dst=0, op=dist.ReduceOp.SUM)
+      dist.reduce(avg_vcorr, dst=0, op=dist.ReduceOp.SUM)
+      avg_vloss = avg_vloss.item()
+      avg_vcorr = avg_vcorr.item()
+              
+      if local_rank == 0:
+        avg_loss /= dist.get_world_size()
+        avg_corr /= dist.get_world_size()
+        avg_vloss /= dist.get_world_size()
+        avg_vcorr /= dist.get_world_size()
 
-      # Log the running loss averaged per batch
-      # for both training and validation
-      writer.add_scalars('Training vs. Validation Loss',
-                    { 'Training' : avg_loss, 'Validation' : avg_vloss },
-                    epoch_number + 1)
-      writer.add_scalars('Training vs. Validation Correlation',
-                    { 'Training' : avg_corr, 'Validation' : avg_vcorr },
-                    epoch_number + 1)
-      writer.flush()
+        print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
+        print('MATTHEW CORRELATION train {} valid {}'.format(avg_corr, avg_vcorr))
 
-      # Track best performance, and save the model's state
-      # if avg_vloss < best_vloss:
-      #     best_vloss = avg_vloss
-      #     model_path = 'model_{}_{}'.format(timestamp, epoch_number)
-      #     torch.save(model.state_dict(), model_path)
+        # Log the running loss averaged per batch
+        # for both training and validation
+        # writer.add_scalars('Training vs. Validation Loss',
+        #               { 'Training' : avg_loss, 'Validation' : avg_vloss },
+        #               epoch + 1)
+        # writer.add_scalars('Training vs. Validation Correlation',
+        #               { 'Training' : avg_corr, 'Validation' : avg_vcorr },
+        #               epoch + 1)
+        # writer.flush()
 
-      epoch_number += 1
-  
+        # Track best performance, and save the model's state
+        # if avg_vloss < best_vloss:
+        #     best_vloss = avg_vloss
+        #     model_path = 'model_{}_{}'.format(timestamp, epoch)
+        #     torch.save(model.state_dict(), model_path)
 
 
 def main(args):
@@ -534,6 +601,7 @@ def main(args):
   retrain_mode = (args.retrain == 1)
   cap_time_mode= (args.cap_time == 1)
   seed_start = args.seed_start
+  add_bert = args.add_bert
 
   initialize_settings(args.sigma_init, args.sigma_decay)
 
@@ -544,7 +612,8 @@ def main(args):
     else:
       slave()
   else:
-    backprop_train()
+    dist.init_process_group(backend="gloo")
+    backprop_train(add_bert)
 
 def mpi_fork(n):
   """Re-launches the current script with workers
@@ -587,6 +656,7 @@ if __name__ == "__main__":
   parser.add_argument('-s', '--seed_start', type=int, default=111, help='initial seed')
   parser.add_argument('--sigma_init', type=float, default=0.10, help='sigma_init')
   parser.add_argument('--sigma_decay', type=float, default=0.999, help='sigma_decay')
+  parser.add_argument('--add_bert', type=bool, default=False, help='add_bert')
 
   args = parser.parse_args()
   if args.optimizer != "backprop":
