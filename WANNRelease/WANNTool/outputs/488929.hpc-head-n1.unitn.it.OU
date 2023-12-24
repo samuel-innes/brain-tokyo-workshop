@@ -1,0 +1,127 @@
+size of model 514
+('Backpropagation optimization started',)
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─BertBase: 1-1                          [[-1, 768]]               --
+|    └─BertModel: 2-1                    [[-1, 768]]               --
+|    |    └─BertEmbeddings: 3-1          [-1, 512, 768]            23,837,184
+|    |    └─BertEncoder: 3-2             [[-1, 512, 768]]          85,054,464
+|    |    └─BertPooler: 3-3              [-1, 768]                 590,592
+├─SelectiveActivation: 1-2               [-1, 769]                 1
+├─SelectiveActivation: 1-3               [-1, 770]                 --
+|    └─Linear: 2-2                       [-1, 1]                   3
+├─SelectiveActivation: 1-4               [-1, 771]                 --
+|    └─Linear: 2-3                       [-1, 1]                   3
+├─SelectiveActivation: 1-5               [-1, 772]                 --
+|    └─Linear: 2-4                       [-1, 1]                   2
+├─SelectiveActivation: 1-6               [-1, 773]                 --
+|    └─Linear: 2-5                       [-1, 1]                   1
+├─SelectiveActivation: 1-7               [-1, 774]                 --
+|    └─Linear: 2-6                       [-1, 1]                   1
+├─SelectiveActivation: 1-8               [-1, 775]                 --
+|    └─Linear: 2-7                       [-1, 1]                   6
+├─SelectiveActivation: 1-9               [-1, 776]                 --
+|    └─Linear: 2-8                       [-1, 1]                   1
+├─SelectiveActivation: 1-10              [-1, 777]                 --
+|    └─Linear: 2-9                       [-1, 1]                   1
+├─SelectiveActivation: 1-11              [-1, 778]                 --
+|    └─Linear: 2-10                      [-1, 1]                   1
+├─SelectiveActivation: 1-12              [-1, 779]                 --
+|    └─Linear: 2-11                      [-1, 1]                   1
+├─SelectiveActivation: 1-13              [-1, 780]                 --
+|    └─Linear: 2-12                      [-1, 1]                   2
+├─SelectiveActivation: 1-14              [-1, 781]                 --
+|    └─Linear: 2-13                      [-1, 1]                   1
+├─SelectiveActivation: 1-15              [-1, 782]                 --
+|    └─Linear: 2-14                      [-1, 1]                   2
+├─SelectiveActivation: 1-16              [-1, 783]                 --
+|    └─Linear: 2-15                      [-1, 1]                   2
+├─SelectiveActivation: 1-17              [-1, 784]                 --
+|    └─Linear: 2-16                      [-1, 1]                   2
+├─SelectiveActivation: 1-18              [-1, 785]                 --
+|    └─Linear: 2-17                      [-1, 1]                   1
+├─SelectiveActivation: 1-19              [-1, 786]                 --
+|    └─Linear: 2-18                      [-1, 1]                   3
+├─SelectiveActivation: 1-20              [-1, 787]                 --
+|    └─Linear: 2-19                      [-1, 1]                   5
+├─SelectiveActivation: 1-21              [-1, 788]                 --
+|    └─Linear: 2-20                      [-1, 1]                   2
+├─SelectiveActivation: 1-22              [-1, 789]                 --
+|    └─Linear: 2-21                      [-1, 1]                   1
+├─SelectiveActivation: 1-23              [-1, 790]                 --
+|    └─Linear: 2-22                      [-1, 1]                   1
+├─SelectiveActivation: 1-24              [-1, 791]                 --
+|    └─Linear: 2-23                      [-1, 1]                   1
+├─SelectiveActivation: 1-25              [-1, 792]                 --
+|    └─Linear: 2-24                      [-1, 1]                   1
+├─SelectiveActivation: 1-26              [-1, 793]                 --
+|    └─Linear: 2-25                      [-1, 1]                   1
+├─SelectiveActivation: 1-27              [-1, 794]                 --
+|    └─Linear: 2-26                      [-1, 1]                   1
+├─SelectiveActivation: 1-28              [-1, 795]                 --
+|    └─Linear: 2-27                      [-1, 1]                   2
+├─SelectiveActivation: 1-29              [-1, 796]                 --
+|    └─Linear: 2-28                      [-1, 1]                   1
+├─SelectiveActivation: 1-30              [-1, 797]                 --
+|    └─Linear: 2-29                      [-1, 1]                   1
+├─SelectiveActivation: 1-31              [-1, 798]                 --
+|    └─Linear: 2-30                      [-1, 1]                   2
+├─SelectiveActivation: 1-32              [-1, 799]                 --
+|    └─Linear: 2-31                      [-1, 1]                   1
+├─SelectiveActivation: 1-33              [-1, 800]                 --
+|    └─Linear: 2-32                      [-1, 1]                   1
+├─SelectiveActivation: 1-34              [-1, 801]                 --
+|    └─Linear: 2-33                      [-1, 1]                   1
+├─SelectiveActivation: 1-35              [-1, 802]                 --
+|    └─Linear: 2-34                      [-1, 1]                   2
+├─SelectiveActivation: 1-36              [-1, 803]                 --
+|    └─Linear: 2-35                      [-1, 1]                   1
+├─SelectiveActivation: 1-37              [-1, 804]                 --
+|    └─Linear: 2-36                      [-1, 1]                   2
+├─SelectiveActivation: 1-38              [-1, 805]                 --
+|    └─Linear: 2-37                      [-1, 1]                   1
+├─SelectiveActivation: 1-39              [-1, 806]                 --
+|    └─Linear: 2-38                      [-1, 1]                   1
+├─SelectiveActivation: 1-40              [-1, 807]                 --
+|    └─Linear: 2-39                      [-1, 1]                   2
+├─SelectiveActivation: 1-41              [-1, 808]                 --
+|    └─Linear: 2-40                      [-1, 1]                   1
+├─SelectiveActivation: 1-42              [-1, 809]                 --
+|    └─Linear: 2-41                      [-1, 1]                   1
+├─SelectiveActivation: 1-43              [-1, 810]                 --
+|    └─Linear: 2-42                      [-1, 1]                   1
+├─SelectiveActivation: 1-44              [-1, 811]                 --
+|    └─Linear: 2-43                      [-1, 1]                   1
+├─SelectiveActivation: 1-45              [-1, 812]                 --
+|    └─Linear: 2-44                      [-1, 1]                   1
+├─SelectiveActivation: 1-46              [-1, 813]                 --
+|    └─Linear: 2-45                      [-1, 1]                   1
+├─SelectiveActivation: 1-47              [-1, 814]                 --
+|    └─Linear: 2-46                      [-1, 1]                   2
+├─SelectiveActivation: 1-48              [-1, 815]                 --
+|    └─Linear: 2-47                      [-1, 1]                   2
+├─SelectiveActivation: 1-49              [-1, 816]                 --
+|    └─Linear: 2-48                      [-1, 1]                   3
+├─SelectiveActivation: 1-50              [-1, 817]                 --
+|    └─Linear: 2-49                      [-1, 1]                   2
+├─SelectiveActivation: 1-51              [-1, 818]                 --
+|    └─Linear: 2-50                      [-1, 1]                   2
+├─SelectiveActivation: 1-52              [-1, 819]                 --
+|    └─Linear: 2-51                      [-1, 1]                   2
+├─SelectiveActivation: 1-53              [-1, 820]                 --
+|    └─Linear: 2-52                      [-1, 1]                   205
+├─SelectiveActivation: 1-54              [-1, 821]                 --
+|    └─Linear: 2-53                      [-1, 1]                   226
+├─WANNOutput: 1-55                       [-1, 2]                   --
+==========================================================================================
+Total params: 109,482,755
+Trainable params: 109,482,755
+Non-trainable params: 0
+Total mult-adds (M): 352.57
+==========================================================================================
+Input size (MB): 0.00
+Forward/backward pass size (MB): 12.01
+Params size (MB): 417.64
+Estimated Total Size (MB): 429.66
+==========================================================================================
