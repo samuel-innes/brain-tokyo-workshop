@@ -1,0 +1,5 @@
+Job: Command: Description
+
+462331: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 128 -t 4: This job finetuned the WANN using the PEPG optimizer over 383 generations
+462481: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/model.py cola_train -f log/cola_train.pepg.4.512.best.json: This job validated the model score by selecting random subsets 100 times and averaging the score
+484069: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 1 -o backprop: This job froze the bert model and otimized the WANN architecture using Backpropagation over 50 epochs
