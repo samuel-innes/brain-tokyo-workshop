@@ -1,6 +1,11 @@
 Job: Command: Description
 
+PBS:
 462331: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 128 -t 4: This job finetuned the WANN using the PEPG optimizer over 383 generations
 462481: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/model.py cola_train -f log/cola_train.pepg.4.512.best.json: This job validated the model score by selecting random subsets 100 times and averaging the score
 484069: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 1 -o backprop: This job froze the bert model and otimized the WANN architecture using Backpropagation over 50 epochs
-488929: torchrun --standalone --nnodes=1 --nproc_per_node=1 /brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 1 -o backprop --add_bert True: This job printed out the models architecture when also adding the Bert base model. To repeat this, the code lines printing the model summary have to be uncommented and the training part has to be left out.
+488929: python3 /brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 1 -o backprop --add_bert True: This job printed out the models architecture when also adding the Bert base model. To repeat this, the code lines printing the model summary have to be uncommented and the training part has to be left out.
+
+SLURM:
+432096: python3 train.py cola_train -n 1 -o backprop --add_bert True: Run 10 epochs of backpropagation finetuning bert and the WANN head with the optimizer: torch.optim.AdamW(torch_model.parameters(), lr=2e-5)
+432097: python3 train.py cola_train -n 1 -o backprop --add_bert True: Run 10 epochs of backpropagation finetuning bert and the WANN head with the optimizer: torch.optim.Adam(torch_model.parameters(), lr=2e-5)

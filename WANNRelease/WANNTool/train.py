@@ -387,6 +387,10 @@ def master():
 def backprop_train(add_bert=False):
   global model, num_worker
   
+  device = torch.device("cuda:0" if torch.cuda.is_available() and num_worker == 1 else "cpu")
+  print("We are executing on:", device)
+  torch.set_default_device(device)
+  
   if num_worker > 1:
     local_rank = int(os.environ["LOCAL_RANK"])
     sprint("Backpropagation optimization started", local_rank)
@@ -396,6 +400,7 @@ def backprop_train(add_bert=False):
   BATCH_SIZE = 32
   
   torch_model = backpropmodel.importNetAsTorchModel("champions/"+model.wann_file, model.input_size, model.output_size, add_bert=add_bert)
+  torch_model = torch_model.to(device)
   
   
   if add_bert:
@@ -415,29 +420,35 @@ def backprop_train(add_bert=False):
     
     train_ds, train_attn_mask_ds, train_labels = encoded_dataset["train"]["input_ids"], encoded_dataset["train"]["attention_mask"], encoded_dataset["train"]["label"]
     train_ds = torch.tensor(train_ds)
+    train_ds = train_ds.to(device)
     train_attn_mask_ds = torch.tensor(train_attn_mask_ds)
+    train_attn_mask_ds = train_attn_mask_ds.to(device)
     train_ds = torch.stack([train_ds, train_attn_mask_ds], dim = 1)
     train_labels = torch.tensor(train_labels)
+    train_labels = train_labels.to(device)
     train = torch.utils.data.TensorDataset(train_ds, train_labels)
     
     if num_worker > 1:
       train_sampler = torch.utils.data.distributed.DistributedSampler(train)
       train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, sampler=train_sampler)
     else:
-      train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True)
+      train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True, generator = torch.Generator(device=device))
     
     val_ds, val_attn_mask_ds, val_labels = encoded_dataset["validation"]["input_ids"], encoded_dataset["validation"]["attention_mask"], encoded_dataset["validation"]["label"]
     val_ds = torch.tensor(val_ds)
+    val_ds = val_ds.to(device)
     val_attn_mask_ds = torch.tensor(val_attn_mask_ds)
+    val_attn_mask_ds = val_attn_mask_ds.to(device)
     val_ds = torch.stack([val_ds, val_attn_mask_ds], dim = 1)
     val_labels = torch.tensor(val_labels)
+    val_labels = val_labels.to(device)
     val = torch.utils.data.TensorDataset(val_ds, val_labels)
     
     if num_worker > 1:
       val_sampler = torch.utils.data.distributed.DistributedSampler(val)
       val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, sampler=val_sampler)
     else:
-      val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, shuffle=False)
+      val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, shuffle=False, generator = torch.Generator(device=device))
   else:
     train_ds, train_labels  = cola("train")
     train_ds = torch.tensor(train_ds)
@@ -458,9 +469,9 @@ def backprop_train(add_bert=False):
   
   loss_fn = torch.nn.CrossEntropyLoss()
   if add_bert:
-    optimizer = torch.optim.Adam(torch_model.parameters(), lr=2e-5, weight_decay=0.01)
+    optimizer = torch.optim.AdamW(torch_model.parameters(), lr=2e-5)
   else:
-    optimizer = torch.optim.Adam(torch_model.parameters())
+    optimizer = torch.optim.AdamW(torch_model.parameters())
   
   def compute_metrics(labels, predictions):
     predictions = np.argmax(predictions, axis=1)
@@ -496,7 +507,7 @@ def backprop_train(add_bert=False):
         
         # Compute the loss and its gradients
         loss = loss_fn(outputs, labels)
-        corr = compute_metrics(labels, outputs.detach().numpy())
+        corr = compute_metrics(labels.cpu(), outputs.cpu().detach().numpy())
         corr = float(corr)
         loss.backward()
 
@@ -572,7 +583,7 @@ def backprop_train(add_bert=False):
               vinputs, vlabels = vdata
               voutputs = torch_model(vinputs)
               vloss = loss_fn(voutputs, vlabels)
-              vcorr = compute_metrics(vlabels, voutputs.detach().numpy())
+              vcorr = compute_metrics(vlabels.cpu(), voutputs.cpu().detach().numpy())
               vcorr = float(vcorr)
               running_vloss += vloss
               running_vcorr += vcorr
@@ -653,7 +664,10 @@ def mpi_fork(n):
     return "child"
 
 if __name__ == "__main__":
-  os.chdir("/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/")
+  if torch.cuda.is_available():
+    os.chdir("/home/marten.mueller/bioAIproject/brain-tokyo-workshop/WANNRelease/WANNTool/")
+  else:
+    os.chdir("/home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/")
   
   parser = argparse.ArgumentParser(description=('Train policy on OpenAI Gym environment '
                                                 'using pepg, ses, openes, ga, cma'))
