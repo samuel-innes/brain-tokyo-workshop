@@ -7,11 +7,11 @@ import torch.nn as nn
 task = "cola"
 model_checkpoint = "bert-base-uncased"
 batch_size = 16
-num_epochs = 3
+num_epochs = 10
 
 # --- model params ----
-freeze_bert = True
-dense_layer = True
+freeze_bert = False
+dense_layer = False
 # ---------------------
 
 

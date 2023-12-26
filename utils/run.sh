@@ -6,5 +6,5 @@
 #SBATCH -N 1
 #SBATCH -t 0-01:00
 
-python3 get_bert_outputs.py
-# python3 baseline.py
+# python3 get_bert_outputs.py
+python3 baseline.py
