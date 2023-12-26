@@ -385,10 +385,13 @@ def master():
       sprint("improvement", t, improvement, "curr", reward_eval, "prev", prev_best_reward_eval, "best", best_reward_eval, "stdev", reward_stdev)
       
 def backprop_train(add_bert=False):
-  global model
+  global model, num_worker
   
-  local_rank = int(os.environ["LOCAL_RANK"])
-  sprint("Backpropagation optimization started", local_rank)
+  if num_worker > 1:
+    local_rank = int(os.environ["LOCAL_RANK"])
+    sprint("Backpropagation optimization started", local_rank)
+  else:
+    sprint("Backpropagation optimization started")
   
   BATCH_SIZE = 32
   
@@ -399,7 +402,8 @@ def backprop_train(add_bert=False):
     from transformers import BertTokenizer
     from datasets import load_dataset
     
-    torch_model = torch.nn.parallel.DistributedDataParallel(torch_model, find_unused_parameters=True)
+    if num_worker > 1:
+      torch_model = torch.nn.parallel.DistributedDataParallel(torch_model, find_unused_parameters=True)
     
     dataset = load_dataset("glue", "cola")
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
@@ -416,8 +420,11 @@ def backprop_train(add_bert=False):
     train_labels = torch.tensor(train_labels)
     train = torch.utils.data.TensorDataset(train_ds, train_labels)
     
-    train_sampler = torch.utils.data.distributed.DistributedSampler(train)
-    train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, sampler=train_sampler)
+    if num_worker > 1:
+      train_sampler = torch.utils.data.distributed.DistributedSampler(train)
+      train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, sampler=train_sampler)
+    else:
+      train_loader = torch.utils.data.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True)
     
     val_ds, val_attn_mask_ds, val_labels = encoded_dataset["validation"]["input_ids"], encoded_dataset["validation"]["attention_mask"], encoded_dataset["validation"]["label"]
     val_ds = torch.tensor(val_ds)
@@ -426,8 +433,11 @@ def backprop_train(add_bert=False):
     val_labels = torch.tensor(val_labels)
     val = torch.utils.data.TensorDataset(val_ds, val_labels)
     
-    val_sampler = torch.utils.data.distributed.DistributedSampler(val)
-    val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, sampler=val_sampler)
+    if num_worker > 1:
+      val_sampler = torch.utils.data.distributed.DistributedSampler(val)
+      val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, sampler=val_sampler)
+    else:
+      val_loader = torch.utils.data.DataLoader(val, batch_size=BATCH_SIZE, shuffle=False)
   else:
     train_ds, train_labels  = cola("train")
     train_ds = torch.tensor(train_ds)
@@ -465,6 +475,11 @@ def backprop_train(add_bert=False):
     last_corr = 0.
     total_loss = 0.
     total_corr = 0.
+    
+    if num_worker > 1:
+      print_cnt = 8
+    else:
+      print_cnt = 64
 
     # Here, we use enumerate(training_loader) instead of
     # iter(training_loader) so that we can track the batch
@@ -482,6 +497,7 @@ def backprop_train(add_bert=False):
         # Compute the loss and its gradients
         loss = loss_fn(outputs, labels)
         corr = compute_metrics(labels, outputs.detach().numpy())
+        corr = float(corr)
         loss.backward()
 
         # Adjust learning weights
@@ -490,23 +506,25 @@ def backprop_train(add_bert=False):
         # Gather data and report
         running_loss += loss.item()
         running_corr += corr
-        if i % 8 == 7:
+        if i % print_cnt == print_cnt - 1:
             total_loss += running_loss
             total_corr += running_corr
-            last_loss = running_loss / 8 # loss per batch
-            last_corr = running_corr / 8 # corr per batch
+            last_loss = running_loss / print_cnt # loss per batch
+            last_corr = running_corr / print_cnt # corr per batch
             
-            last_loss = torch.tensor([last_loss])
-            last_corr = torch.tensor([last_corr])
-            dist.reduce(last_loss, dst=0, op=dist.ReduceOp.SUM)
-            dist.reduce(last_corr, dst=0, op=dist.ReduceOp.SUM)
-            last_loss = last_loss.item()
-            last_corr = last_corr.item()
+            if num_worker > 1:
+              last_loss = torch.tensor([last_loss])
+              last_corr = torch.tensor([last_corr])
+              dist.reduce(last_loss, dst=0, op=dist.ReduceOp.SUM)
+              dist.reduce(last_corr, dst=0, op=dist.ReduceOp.SUM)
+              last_loss = last_loss.item()
+              last_corr = last_corr.item()
             
-            if local_rank == 0:
-              assert dist.get_world_size() == int(os.environ["WORLD_SIZE"])
-              last_loss /= dist.get_world_size()
-              last_corr /= dist.get_world_size()
+              if local_rank == 0:
+                last_loss /= dist.get_world_size()
+                last_corr /= dist.get_world_size()
+                print('  batch {} loss: {} corr: {}'.format(i + 1, last_loss, last_corr))
+            else:
               print('  batch {} loss: {} corr: {}'.format(i + 1, last_loss, last_corr))
             running_loss = 0.
             running_corr = 0.
@@ -515,28 +533,32 @@ def backprop_train(add_bert=False):
     return total_loss, total_corr
   
   # Initializing in a separate cell so we can easily add more epochs to the same run
-  EPOCHS = 8
+  EPOCHS = 10
 
   best_vloss = 1_000_000.
   best_vcorr = -2.
 
   for epoch in range(EPOCHS):
-      if local_rank == 0:
+      if num_worker > 1:
+        if local_rank == 0:
+          print('EPOCH {}:'.format(epoch + 1))
+      else:
         print('EPOCH {}:'.format(epoch + 1))
       
-      if add_bert:
+      if add_bert and num_worker > 1:
         train_sampler.set_epoch(epoch + 1)
 
       # Make sure gradient tracking is on, and do a pass over the data
       torch_model.train(True)
       avg_loss, avg_corr = train_one_epoch(epoch)
       
-      avg_loss = torch.tensor([avg_loss])
-      avg_corr = torch.tensor([avg_corr])
-      dist.reduce(avg_loss, dst=0, op=dist.ReduceOp.SUM)
-      dist.reduce(avg_corr, dst=0, op=dist.ReduceOp.SUM)
-      avg_loss = avg_loss.item()
-      avg_corr = avg_corr.item()
+      if num_worker > 1:
+        avg_loss = torch.tensor([avg_loss])
+        avg_corr = torch.tensor([avg_corr])
+        dist.reduce(avg_loss, dst=0, op=dist.ReduceOp.SUM)
+        dist.reduce(avg_corr, dst=0, op=dist.ReduceOp.SUM)
+        avg_loss = avg_loss.item()
+        avg_corr = avg_corr.item()
       
       # Set the model to evaluation mode, disabling dropout and using population
       # statistics for batch normalization.
@@ -551,42 +573,32 @@ def backprop_train(add_bert=False):
               voutputs = torch_model(vinputs)
               vloss = loss_fn(voutputs, vlabels)
               vcorr = compute_metrics(vlabels, voutputs.detach().numpy())
+              vcorr = float(vcorr)
               running_vloss += vloss
               running_vcorr += vcorr
       avg_vloss = running_vloss / (i + 1)
       avg_vcorr = running_vcorr / (i + 1)
       
-      avg_vloss = torch.tensor([avg_vloss])
-      avg_vcorr = torch.tensor([avg_vcorr])
-      dist.reduce(avg_vloss, dst=0, op=dist.ReduceOp.SUM)
-      dist.reduce(avg_vcorr, dst=0, op=dist.ReduceOp.SUM)
-      avg_vloss = avg_vloss.item()
-      avg_vcorr = avg_vcorr.item()
-              
-      if local_rank == 0:
-        avg_loss /= dist.get_world_size()
-        avg_corr /= dist.get_world_size()
-        avg_vloss /= dist.get_world_size()
-        avg_vcorr /= dist.get_world_size()
+      if num_worker > 1:
+        avg_vloss = torch.tensor([avg_vloss])
+        avg_vcorr = torch.tensor([avg_vcorr])
+        dist.reduce(avg_vloss, dst=0, op=dist.ReduceOp.SUM)
+        dist.reduce(avg_vcorr, dst=0, op=dist.ReduceOp.SUM)
+        avg_vloss = avg_vloss.item()
+        avg_vcorr = avg_vcorr.item()
+      
+      if num_worker > 1:
+        if local_rank == 0:
+          avg_loss /= dist.get_world_size()
+          avg_corr /= dist.get_world_size()
+          avg_vloss /= dist.get_world_size()
+          avg_vcorr /= dist.get_world_size()
 
+          print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
+          print('MATTHEW CORRELATION train {} valid {}'.format(avg_corr, avg_vcorr))
+      else:
         print('LOSS train {} valid {}'.format(avg_loss, avg_vloss))
         print('MATTHEW CORRELATION train {} valid {}'.format(avg_corr, avg_vcorr))
-
-        # Log the running loss averaged per batch
-        # for both training and validation
-        # writer.add_scalars('Training vs. Validation Loss',
-        #               { 'Training' : avg_loss, 'Validation' : avg_vloss },
-        #               epoch + 1)
-        # writer.add_scalars('Training vs. Validation Correlation',
-        #               { 'Training' : avg_corr, 'Validation' : avg_vcorr },
-        #               epoch + 1)
-        # writer.flush()
-
-        # Track best performance, and save the model's state
-        # if avg_vloss < best_vloss:
-        #     best_vloss = avg_vloss
-        #     model_path = 'model_{}_{}'.format(timestamp, epoch)
-        #     torch.save(model.state_dict(), model_path)
 
 
 def main(args):
@@ -612,7 +624,8 @@ def main(args):
     else:
       slave()
   else:
-    dist.init_process_group(backend="gloo")
+    if num_worker > 1:
+      dist.init_process_group(backend="gloo")
     backprop_train(add_bert)
 
 def mpi_fork(n):
