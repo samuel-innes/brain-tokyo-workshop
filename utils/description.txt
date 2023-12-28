@@ -1,4 +1,0 @@
-Job: Command: Description
-
-430369: python3 baseline.py: 3 epoch training of the BertForSequenceClassification model
-432072: python3 baseline.py: 10 epoch training of the BertForSequenceClassification model

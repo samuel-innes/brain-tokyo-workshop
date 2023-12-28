@@ -26,7 +26,7 @@ import argparse
 import time
 import torch
 from torchsummary import summary
-from sklearn.metrics import matthews_corrcoef
+from sklearn.metrics import matthews_corrcoef, f1_score
 from custom_envs.classify_gym import cola
 import torch.distributed as dist
 
@@ -410,7 +410,7 @@ def backprop_train(add_bert=False):
     if num_worker > 1:
       torch_model = torch.nn.parallel.DistributedDataParallel(torch_model, find_unused_parameters=True)
     
-    dataset = load_dataset("glue", "cola")
+    dataset = load_dataset("glue", glue_task)
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     
     def preprocess_function(examples):
@@ -476,8 +476,11 @@ def backprop_train(add_bert=False):
   def compute_metrics(labels, predictions):
     predictions = np.argmax(predictions, axis=1)
     
-    corr = matthews_corrcoef(labels, predictions)
-    return corr
+    if glue_task == 'cola':
+      score = matthews_corrcoef(labels, predictions)
+    elif glue_task == 'mrpc':
+      score = f1_score(labels, predictions)
+    return score
   
   def train_one_epoch(epoch_index):
     running_loss = 0.
@@ -613,7 +616,7 @@ def backprop_train(add_bert=False):
 
 
 def main(args):
-  global gamename, optimizer, num_episode, eval_steps, num_worker, num_worker_trial, antithetic, seed_start, retrain_mode, cap_time_mode
+  global gamename, optimizer, num_episode, eval_steps, num_worker, num_worker_trial, antithetic, seed_start, retrain_mode, cap_time_mode, glue_task
   gamename = args.gamename
   optimizer = args.optimizer
   num_episode = args.num_episode
@@ -625,6 +628,7 @@ def main(args):
   cap_time_mode= (args.cap_time == 1)
   seed_start = args.seed_start
   add_bert = args.add_bert
+  glue_task = args.glue_task
 
   initialize_settings(args.sigma_init, args.sigma_decay)
 
@@ -684,6 +688,7 @@ if __name__ == "__main__":
   parser.add_argument('--sigma_init', type=float, default=0.10, help='sigma_init')
   parser.add_argument('--sigma_decay', type=float, default=0.999, help='sigma_decay')
   parser.add_argument('--add_bert', type=bool, default=False, help='add_bert')
+  parser.add_argument('--glue_task', type=str, default='cola', help='glue task to fine-tune network on')
 
   args = parser.parse_args()
   if args.optimizer != "backprop":
