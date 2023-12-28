@@ -1,4 +1,5 @@
 Job: Command: Description
 
 461337: python3 /brain-tokyo-workshop/WANNRelease/WANN/wann_train.py -n 256 -p 'p/cola.json' -o 'cola': This job produced the WANN output which can be found in the log/ subfolder
-462235: python3 /brain-tokyo-workshop/WANNRelease/WANN/wann_test.py -p 'p/cola.json' -o 'log/cola_result_' -i 'log/cola_best.out': This job checked the WANNs score for validity by running it on a range of weights
+462235: python3 /brain-tokyo-workshop/WANNRelease/WANN/wann_test.py -p 'p/cola.json' -o 'log/cola_result_' -i 'log/cola_best.out': This job checked the WANNs score for validity by running it on a range of weights on the train set
+496911: python3 /brain-tokyo-workshop/WANNRelease/WANN/wann_test.py -p 'p/cola_test.json' -o 'log/cola_test_result_' -i 'log/cola_best.out': This job checked the WANNs score for validity by running it on a range of weights on the validation set

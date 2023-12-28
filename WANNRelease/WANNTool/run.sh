@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#PBS -l select=1:ncpus=1:mem=8gb
+#PBS -l select=1:ncpus=1:mem=4gb
 
 # set max execution time
-#PBS -l walltime=10:00:00
+#PBS -l walltime=00:05:00
 
 # define the queue
-#PBS -q common_cpuQ
+#PBS -q short_cpuQ
 
 # set error and output folders
 #PBS -o outputs
@@ -18,7 +18,8 @@ module load python-3.8.13
 source /home/marten.mueller/project/bioai/.venv/bin/activate
 
 # python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/model.py cola_train -f log/cola_train.pepg.4.512.best.json
+python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/model.py cola_val -f log/cola_train.pepg.4.512.best.json
 # python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 128 -t 4 -o cma --sigma_init 0.5
 # python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 128 -t 4
-python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 1 -o backprop --add_bert True
+# python3 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 1 -o backprop --add_bert True
 # torchrun --standalone --nnodes=1 --nproc_per_node=8 /home/marten.mueller/project/bioai/brain-tokyo-workshop/WANNRelease/WANNTool/train.py cola_train -n 8 -o backprop --add_bert True
