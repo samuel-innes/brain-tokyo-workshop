@@ -125,17 +125,20 @@ def mnist_256():
   z = z.reshape(-1, (256))
   return z, mnist.train_labels()
 
-def cola():
+def cola(dataset_type):
   ''' 
   Fetches the CLS embedding for cola training set
   [samples x embedding dimension]  ([N X 768]) by default
   '''  
-  pickled_embeddings_path = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/train.pkl"
-  with open(pickled_embeddings_path, 'rb') as f:
+  assert dataset_type in ["train", "test", "validation"]
+  
+  pickled_embeddings_path_pref = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/"
+    
+  with open(pickled_embeddings_path_pref + dataset_type + ".pkl", 'rb') as f:
     embeddings = pickle.load(f)
   
-  pickled_labels_path = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/train_label.pkl"
-  with open(pickled_labels_path, 'rb') as f:
+  pickled_labels_path_pref = "/home/marten.mueller/project/bioai/brain-tokyo-workshop/utils/cola_embed/"
+  with open(pickled_labels_path_pref + dataset_type + "_label.pkl", 'rb') as f:
     labels = pickle.load(f)
 
   labels = np.array(labels) # convert to np array

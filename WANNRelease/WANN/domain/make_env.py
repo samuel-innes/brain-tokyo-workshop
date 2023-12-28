@@ -46,7 +46,12 @@ def make_env(env_name, seed=-1, render_mode=False):
 
     elif env_name.endswith("cola"):
       from domain.classify_gym import cola
-      trainSet, target = cola()
+      trainSet, target = cola("train")
+      use_matt_corr = True
+      
+    elif env_name.endswith("cola_test"):
+      from domain.classify_gym import cola
+      trainSet, target = cola("validation")
       use_matt_corr = True
       
     env = ClassifyEnv(trainSet, target, matt_corr_mode=use_matt_corr)  
