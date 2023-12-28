@@ -26,7 +26,7 @@ def main(argv):
   seed    = args.seed
   
   # Whether we have the cola task
-  cola_task = True if args.hyperparam == "p/cola.json" else False
+  cola_task = True if args.hyperparam in ["p/cola.json", "p/cola_test.json"] else False
 
   # Load task and parameters
   hyp = loadHyp(pFileName=hyp_default)

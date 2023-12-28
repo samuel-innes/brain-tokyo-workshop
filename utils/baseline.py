@@ -3,11 +3,11 @@ from transformers import BertTokenizer, BertForSequenceClassification, TrainingA
 from copy import deepcopy
 import numpy as np
 import torch.nn as nn
-import torch
+from copy import deepcopy
 
 task = "cola"
 model_checkpoint = "bert-base-uncased"
-batch_size = 16
+batch_size = 32
 num_epochs = 10
 
 # --- model params ----
@@ -107,12 +107,22 @@ def compute_metrics(eval_predictions):
     predictions = np.argmax(logits, axis=1)
     return metric.compute(predictions=predictions, references=labels)
 
-validation_key = "validation"
+class CustomCallback(TrainerCallback):
+    def __init__(self, trainer) -> None:
+        super().__init__()
+        self._trainer = trainer
+    
+    def on_epoch_end(self, args, state, control, **kwargs):
+        if control.should_evaluate:
+            control_copy = deepcopy(control)
+            self._trainer.evaluate(eval_dataset=self._trainer.train_dataset, metric_key_prefix="train")
+            return control_copy
+
 trainer = Trainer(
     model,
     args,
     train_dataset=encoded_dataset["train"],
-    eval_dataset=encoded_dataset[validation_key],
+    eval_dataset=encoded_dataset["validation"],
     tokenizer=tokenizer,
     compute_metrics=compute_metrics
 )

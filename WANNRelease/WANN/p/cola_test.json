@@ -1,0 +1,13 @@
+{
+    "task":"cola_test",
+    "maxGen": 512,
+    "popSize": 512,
+    "alg_nReps": 2,
+    "prob_addConn": 0.35,
+    "prob_addNode": 0.35,
+    "prob_enable": 0.05,
+    "prob_initEnable": 0.3,
+    "select_tournSize": 16,
+    "save_mod": 16,
+    "bestReps": 12
+}
