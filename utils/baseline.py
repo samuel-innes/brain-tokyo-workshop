@@ -67,7 +67,7 @@ if dense_layer:
     model = CustomBERTModel()
 else: 
     model = BertForSequenceClassification.from_pretrained(
-            model_checkpoint, num_labels=num_labels, id2label=id2label, label2id=label2id
+            model_checkpoint, num_labels=2, id2label=id2label, label2id=label2id
         )
 
 if freeze_bert:
