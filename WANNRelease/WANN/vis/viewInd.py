@@ -6,7 +6,7 @@ sys.path.append('../domain/')
 sys.path.append('vis')
 from domain.config import games
 
-def viewInd(ind, taskName, figsize=(10,10)):
+def viewInd(ind, taskName, figsize=(10,10), showIn=True):
   env = games[taskName]
   if isinstance(ind, str):
     ind = np.loadtxt(ind, delimiter=',') 
@@ -30,8 +30,8 @@ def viewInd(ind, taskName, figsize=(10,10)):
   nx.draw_networkx_nodes(G,pos,\
     node_color='lightblue',node_shape='o',\
     cmap='terrain',vmin=0,vmax=6)
-  drawNodeLabels(G,pos,aVec) 
-  labelInOut(pos,env)
+  drawNodeLabels(G,pos,aVec,showIn=0 if showIn else nIn ) 
+  labelInOut(pos,env,showIn=showIn)
   
   plt.tick_params(
     axis='both',       # changes apply to the x-axis
@@ -102,7 +102,7 @@ def getNodeCoord(G,layer,taskName):
     
     return pos
   
-def labelInOut(pos, env):
+def labelInOut(pos, env,showIn=True):
   nIn  = env.input_size+1
   nOut = env.output_size 
   nNode= len(pos)
@@ -114,20 +114,22 @@ def labelInOut(pos, env):
   for i in range(len(stateLabels)):
         labelDict[fixed_nodes[i]] = stateLabels[i]
       
-  for i in range(nIn):
-    plt.annotate(labelDict[i], xy=(pos[i][0]-0.5, pos[i][1]), xytext=(pos[i][0]-2.5, pos[i][1]-0.5),\
-               arrowprops=dict(arrowstyle="->",color='k',connectionstyle="angle"))
+  if showIn:
+    for i in range(nIn):
+      plt.annotate(labelDict[i], xy=(pos[i][0]-0.5, pos[i][1]), xytext=(pos[i][0]-2.5, pos[i][1]-0.5),\
+                   arrowprops=dict(arrowstyle="->",color='k',connectionstyle="angle"))
 
   for i in range(nNode-nOut,nNode):
     plt.annotate(labelDict[i], xy=(pos[i][0]+0.1, pos[i][1]), xytext=(pos[i][0]+1.5, pos[i][1]+1.0),\
                arrowprops=dict(arrowstyle="<-",color='k',connectionstyle="angle"))
 
     
-def drawNodeLabels(G, pos, aVec):  
+def drawNodeLabels(G, pos, aVec, startWith=0):  
   actLabel = np.array((['','( + )','(0/1)','(sin)','(gau)','(tanh)',\
                         '(sig)','( - )', '(abs)','(relu)','(cos)']))
   listLabel = actLabel[aVec.astype(int)]  
   label = dict(enumerate(listLabel))
+  label = {k: '' if k < startwith else v for k,v in label}
   nx.draw_networkx_labels(G,pos,labels=label)  
   
   
