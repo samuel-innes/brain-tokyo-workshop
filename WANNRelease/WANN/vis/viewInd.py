@@ -30,7 +30,7 @@ def viewInd(ind, taskName, figsize=(10,10), showIn=True):
   nx.draw_networkx_nodes(G,pos,\
     node_color='lightblue',node_shape='o',\
     cmap='terrain',vmin=0,vmax=6)
-  drawNodeLabels(G,pos,aVec,showIn=0 if showIn else nIn ) 
+  drawNodeLabels(G,pos,aVec,startWith=0 if showIn else nIn ) 
   labelInOut(pos,env,showIn=showIn)
   
   plt.tick_params(
@@ -129,7 +129,7 @@ def drawNodeLabels(G, pos, aVec, startWith=0):
                         '(sig)','( - )', '(abs)','(relu)','(cos)']))
   listLabel = actLabel[aVec.astype(int)]  
   label = dict(enumerate(listLabel))
-  label = {k: '' if k < startwith else v for k,v in label}
+  label = {k: '' if k < startWith else v for k,v in label.items()}
   nx.draw_networkx_labels(G,pos,labels=label)  
   
   
