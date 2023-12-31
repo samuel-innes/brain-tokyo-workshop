@@ -5,13 +5,13 @@ import numpy as np
 import torch.nn as nn
 from copy import deepcopy
 
-task = "cola"
+task = "sst2"
 model_checkpoint = "bert-base-uncased"
 batch_size = 32
 num_epochs = 10
 
 # --- model params ----
-freeze_bert = False
+freeze_bert = True
 dense_layer = False
 # ---------------------
 print("Model parameters:")
@@ -75,7 +75,13 @@ if freeze_bert:
         if 'classifier' not in name:  # classifier layer
             param.requires_grad = False
 
-metric_name = "matthews_correlation"
+if task == 'cola':
+    metric_name = "matthews_correlation"
+elif task == 'sst2':
+    metric_name = 'accuracy'
+else:
+    raise NotImplementedError
+
 model_name = model_checkpoint.split("/")[-1]
 
 class CustomCallback(TrainerCallback):

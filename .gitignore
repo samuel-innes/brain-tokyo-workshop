@@ -1,6 +1,8 @@
 .vscode/
 
 utils/bert-base-uncased-finetuned-cola/*
+utils/bert-base-uncased-finetuned-sst2/*
+utils/run_cl_cluster.sh
 WANNRelease/WANN/log/cola_best/*
 WANNRelease/WANN/log/cola_pop/*
 
@@ -11,3 +13,6 @@ WANNRelease/WANN/log/cola_pop/*
 .runs/
 
 *.pyc
+
+WANNRelease/WANNTool/train_no_mpi.py
+WANNRelease/WANNTool/run_cl_cluster.sh
