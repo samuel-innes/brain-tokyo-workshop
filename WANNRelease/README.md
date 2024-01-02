@@ -2,6 +2,14 @@
   <img width="100%" src="https://media.giphy.com/media/Q7IjOrLxlydlyb2kZL/giphy.gif">
 </p>
 
+# WANN for CoLA
+Fork of [WANN](https://github.com/google/brain-tokyo-workshop) introducing the CoLA (Corpus of Linguistic Acceptability) domain. Further improvements to optimize generated networks with backpropagation.
+## CoLA Domain
+In the CoLA domain the goal is to classify linguistically acceptable sentences, e.g. distinguishing that `What did Betsy paint a picture of?` is considered correct but `What was a picture of painted by Betsy?` sounds wrong. As this is a classification domain, it was added in the classification gym.
+
+## Backpropagation
+The original fork didn't compare the Genetic Algorithm wright optimization to the backpropagation. Thus a PyTorch implementation loading the generated model was added in order to run the backpropagation and to train the model jointly with BERT.
+
 # Weight Agnostic Neural Networks
 
 Code to reproduce and extend the experiments in ['Weight Agnostic Neural Networks'](https://weightagnostic.github.io/) by Adam Gaier and David Ha. 
